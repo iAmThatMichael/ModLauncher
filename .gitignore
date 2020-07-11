@@ -13,3 +13,11 @@ ModLauncher.pro
 steam_api64.lib
 steam_api64.dll
 /steam
+debug/
+release/
+.vs/
+.qmake.stash
+*.vcxproj
+ModLauncher.vcxproj
+ModLauncher_resource.rc
+resource.h
