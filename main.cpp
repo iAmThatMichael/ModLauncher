@@ -23,9 +23,9 @@ int main(int argc, char* argv[])
 {
 	QApplication App(argc, argv);
 
-	//QCoreApplication::setOrganizationDomain("treyarch.com");
-	//QCoreApplication::setOrganizationName("Treyarch");
-	//QCoreApplication::setApplicationName("ModLauncher");
+	QCoreApplication::setOrganizationDomain("treyarch.com");
+	QCoreApplication::setOrganizationName("Treyarch");
+	QCoreApplication::setApplicationName("ModLauncher");
 	//QCoreApplication::setApplicationVersion();
 
 	mlMainWindow MainWindow;

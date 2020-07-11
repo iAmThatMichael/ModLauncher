@@ -248,7 +248,7 @@ mlMainWindow::mlMainWindow()
 {
 	QSettings Settings;
 
-	mBuildThread = NULL;
+	mBuildThread = nullptr;
 	mBuildLanguage = Settings.value("BuildLanguage", "english").toString();
 	mTreyarchTheme = Settings.value("UseDarkTheme", false).toBool();
 
@@ -267,7 +267,7 @@ mlMainWindow::mlMainWindow()
 	CreateMenu();
 	CreateToolBar();
 
-	mExport2BinGUIWidget = NULL;
+	mExport2BinGUIWidget = nullptr;
 
 	QSplitter* CentralWidget = new QSplitter();
 	CentralWidget->setOrientation(Qt::Vertical);
@@ -364,10 +364,6 @@ mlMainWindow::mlMainWindow()
 	PopulateFileList();
 }
 
-mlMainWindow::~mlMainWindow()
-{
-}
-
 void mlMainWindow::CreateActions()
 {
 	mActionFileNew = new QAction(QIcon(":/resources/FileNew.png"), "&New...", this);
@@ -451,7 +447,7 @@ void mlMainWindow::CreateToolBar()
 
 void mlMainWindow::InitExport2BinGUI()
 {
-	QDockWidget* dock = new QDockWidget(this, NULL);
+	QDockWidget* dock = new QDockWidget(this, nullptr);
 	dock->setWindowTitle("Export2Bin");
 	dock->setFloating(true);
 
@@ -580,7 +576,7 @@ void mlMainWindow::PopulateFileList()
 
 	for (QString ModName : Mods)
 	{
-		QTreeWidgetItem* ParentItem = NULL;
+		QTreeWidgetItem* ParentItem = nullptr;
 
 		for (int FileIdx = 0; FileIdx < 4; FileIdx++)
 		{
@@ -658,7 +654,7 @@ void mlMainWindow::OnFileLevelEditor()
 
 void mlMainWindow::OnFileExport2Bin()
 {
-	if (mExport2BinGUIWidget == NULL)
+	if (mExport2BinGUIWidget == nullptr)
 	{
 		InitExport2BinGUI();
 		mExport2BinGUIWidget->hide(); // Ensure the window is hidden (just in case)
@@ -1450,7 +1446,7 @@ void mlMainWindow::OnUpdateItemResult(SubmitItemUpdateResult_t* UpdateItemResult
 	                          QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
 		ShellExecute(nullptr, L"open",
 		             QString("steam://url/CommunityFilePage/%1").arg(QString::number(mFileId)).toStdWString().c_str(),
-		             L"", NULL, SW_SHOWDEFAULT);
+		             L"", nullptr, SW_SHOWDEFAULT);
 }
 
 void mlMainWindow::OnHelpAbout()
@@ -1471,7 +1467,7 @@ void mlMainWindow::OnOpenZoneFile()
 		QString MapName = Item->text(0);
 		ShellExecute(nullptr, L"open",
 		             QString("\"%1/usermaps/%2/zone_source/%3.zone\"")
-		             .arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+		             .arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", nullptr, SW_SHOWDEFAULT);
 	}
 	else
 	{
@@ -1479,7 +1475,7 @@ void mlMainWindow::OnOpenZoneFile()
 		QString ZoneName = Item->text(0);
 		ShellExecute(nullptr, L"open",
 		             QString("\"%1/mods/%2/zone_source/%3.zone\"")
-		             .arg(mGamePath, ModName, ZoneName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+		             .arg(mGamePath, ModName, ZoneName).toStdWString().c_str(), L"", nullptr, SW_SHOWDEFAULT);
 	}
 }
 
@@ -1495,14 +1491,14 @@ void mlMainWindow::OnOpenModRootFolder()
 	{
 		QString MapName = Item->text(0);
 		ShellExecute(nullptr, L"open",
-		             QString("\"%1/usermaps/%2\"").arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", NULL,
+		             QString("\"%1/usermaps/%2\"").arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", nullptr,
 		             SW_SHOWDEFAULT);
 	}
 	else
 	{
 		QString ModName = Item->parent() ? Item->parent()->text(0) : Item->text(0);
 		ShellExecute(nullptr, L"open", QString("\"%1/mods/%2\"").arg(mGamePath, ModName).toStdWString().c_str(), L"",
-		             NULL, SW_SHOWDEFAULT);
+			nullptr, SW_SHOWDEFAULT);
 	}
 }
 
@@ -1647,7 +1643,7 @@ void mlMainWindow::BuildFinished()
 {
 	mBuildButton->setText("Build");
 	mBuildThread->deleteLater();
-	mBuildThread = NULL;
+	mBuildThread = nullptr;
 }
 
 Export2BinGroupBox::Export2BinGroupBox(QWidget* parent, mlMainWindow* parent_window) : QGroupBox(parent),
@@ -1665,7 +1661,7 @@ void Export2BinGroupBox::dropEvent(QDropEvent* event)
 {
 	const QMimeData* mimeData = event->mimeData();
 
-	if (parentWindow == NULL)
+	if (parentWindow == nullptr)
 	{
 		return;
 	}
