@@ -19,25 +19,31 @@
 #include "stdafx.h"
 #include "mlMainWindow.h"
 #include <functional>
-#include <steam_api.h>
 
 #pragma comment(lib, "steam_api64")
 
 const int AppId = 311210;
 
-const char* gLanguages[] = { "english", "french", "italian", "spanish", "german", "portuguese", "russian", "polish", "japanese", "traditionalchinese", "simplifiedchinese", "englisharabic" };
-const char* gTags[] = { "Animation", "Audio", "Character", "Map", "Mod", "Mode", "Model", "Multiplayer", "Scorestreak", "Skin", "Specialist", "Texture", "UI", "Vehicle", "Visual Effect", "Weapon", "WIP", "Zombies" };
+const char* gLanguages[] = {
+	"english", "french", "italian", "spanish", "german", "portuguese", "russian", "polish", "japanese",
+	"traditionalchinese", "simplifiedchinese", "englisharabic"
+};
+const char* gTags[] = {
+	"Animation", "Audio", "Character", "Map", "Mod", "Mode", "Model", "Multiplayer", "Scorestreak", "Skin",
+	"Specialist", "Texture", "UI", "Vehicle", "Visual Effect", "Weapon", "WIP", "Zombies"
+};
 dvar_s gDvars[] = {
-					{"ai_disableSpawn", "Disable AI from spawning", DVAR_VALUE_BOOL},
-					{"developer", "Run developer mode", DVAR_VALUE_INT, 0, 2},
-					{"g_password", "Password for your server", DVAR_VALUE_STRING},
-					{"logfile", "Console log information written to current fs_game", DVAR_VALUE_INT, 0, 2},
-					{"scr_mod_enable_devblock", "Developer blocks are executed in mods ", DVAR_VALUE_BOOL},
-					{"connect", "Connect to a specific server", DVAR_VALUE_STRING, NULL, NULL, true},
-					{"set_gametype", "Set a gametype to load with map", DVAR_VALUE_STRING, NULL, NULL, true},
-					{"splitscreen", "Enable splitscreen", DVAR_VALUE_BOOL},
-					{"splitscreen_playerCount", "Allocate the number of instances for splitscreen", DVAR_VALUE_INT, 0, 1}
-				 };
+	{"ai_disableSpawn", "Disable AI from spawning", DVAR_VALUE_BOOL},
+	{"developer", "Run developer mode", DVAR_VALUE_INT, 0, 2},
+	{"g_password", "Password for your server", DVAR_VALUE_STRING},
+	{"logfile", "Console log information written to current fs_game", DVAR_VALUE_INT, 0, 2},
+	{"scr_mod_enable_devblock", "Developer blocks are executed in mods ", DVAR_VALUE_BOOL},
+	{"connect", "Connect to a specific server", DVAR_VALUE_STRING, NULL, NULL, true},
+	{"set_gametype", "Set a gametype to load with map", DVAR_VALUE_STRING, NULL, NULL, true},
+	{"splitscreen", "Enable splitscreen", DVAR_VALUE_BOOL},
+	{"splitscreen_playerCount", "Allocate the number of instances for splitscreen", DVAR_VALUE_INT, 0, 1}
+};
+
 enum mlItemType
 {
 	ML_ITEM_UNKNOWN,
@@ -69,7 +75,7 @@ void mlBuildThread::run()
 			Sleep(100);
 
 			if (Process->waitForReadyRead(0))
-				emit OutputReady(Process->readAll());
+			emit OutputReady(Process->readAll());
 
 			QProcess::ProcessState State = Process->state();
 			if (State == QProcess::NotRunning)
@@ -94,7 +100,8 @@ void mlBuildThread::run()
 }
 
 mlConvertThread::mlConvertThread(QStringList& Files, QString& OutputDir, bool IgnoreErrors, bool OverwriteFiles)
-	: mFiles(Files), mOutputDir(OutputDir), mSuccess(false), mCancel(false), mIgnoreErrors(IgnoreErrors), mOverwrite(OverwriteFiles)
+	: mFiles(Files), mOutputDir(OutputDir), mSuccess(false), mCancel(false), mIgnoreErrors(IgnoreErrors),
+	  mOverwrite(OverwriteFiles)
 {
 }
 
@@ -102,9 +109,9 @@ void mlConvertThread::run()
 {
 	bool Success = true;
 
-	unsigned int convCountSuccess	= 0;
-	unsigned int convCountSkipped	= 0;
-	unsigned int convCountFailed	= 0;
+	unsigned int convCountSuccess = 0;
+	unsigned int convCountSkipped = 0;
+	unsigned int convCountFailed = 0;
 
 	for (QString file : mFiles)
 	{
@@ -253,7 +260,7 @@ mlMainWindow::mlMainWindow()
 
 	setWindowIcon(QIcon(":/resources/ModLauncher.png"));
 	setWindowTitle("Black Ops III Mod Tools Launcher");
-	
+
 	resize(1024, 768);
 
 	CreateActions();
@@ -334,7 +341,13 @@ mlMainWindow::mlMainWindow()
 
 	setCentralWidget(CentralWidget);
 
-	mShippedMapList << "mp_aerospace" <<  "mp_apartments" << "mp_arena" << "mp_banzai" << "mp_biodome" << "mp_chinatown" << "mp_city" << "mp_conduit" << "mp_crucible" << "mp_cryogen" << "mp_ethiopia" << "mp_freerun_01" << "mp_freerun_02" << "mp_freerun_03" << "mp_freerun_04" << "mp_havoc" << "mp_infection" << "mp_kung_fu" << "mp_metro" << "mp_miniature" << "mp_nuketown_x" << "mp_redwood" << "mp_rise" << "mp_rome" << "mp_ruins" << "mp_sector" << "mp_shrine" << "mp_skyjacked" << "mp_spire" << "mp_stronghold" << "mp_veiled" << "mp_waterpark" << "mp_western" << "zm_castle" << "zm_factory" << "zm_genesis" << "zm_island" << "zm_levelcommon" << "zm_stalingrad" << "zm_zod";
+	mShippedMapList << "mp_aerospace" << "mp_apartments" << "mp_arena" << "mp_banzai" << "mp_biodome" << "mp_chinatown"
+		<< "mp_city" << "mp_conduit" << "mp_crucible" << "mp_cryogen" << "mp_ethiopia" << "mp_freerun_01" <<
+		"mp_freerun_02" << "mp_freerun_03" << "mp_freerun_04" << "mp_havoc" << "mp_infection" << "mp_kung_fu" <<
+		"mp_metro" << "mp_miniature" << "mp_nuketown_x" << "mp_redwood" << "mp_rise" << "mp_rome" << "mp_ruins" <<
+		"mp_sector" << "mp_shrine" << "mp_skyjacked" << "mp_spire" << "mp_stronghold" << "mp_veiled" << "mp_waterpark"
+		<< "mp_western" << "zm_castle" << "zm_factory" << "zm_genesis" << "zm_island" << "zm_levelcommon" <<
+		"zm_stalingrad" << "zm_zod";
 
 	Settings.beginGroup("MainWindow");
 	resize(QSize(800, 600));
@@ -438,7 +451,7 @@ void mlMainWindow::CreateToolBar()
 
 void mlMainWindow::InitExport2BinGUI()
 {
-	QDockWidget *dock = new QDockWidget(this, NULL);
+	QDockWidget* dock = new QDockWidget(this, NULL);
 	dock->setWindowTitle("Export2Bin");
 	dock->setFloating(true);
 
@@ -458,7 +471,7 @@ void mlMainWindow::InitExport2BinGUI()
 
 	mExport2BinOverwriteWidget = new QCheckBox("&Overwrite Existing Files", widget);
 	gridLayout->addWidget(mExport2BinOverwriteWidget, 1, 0);
-	
+
 	QSettings Settings;
 	mExport2BinOverwriteWidget->setChecked(Settings.value("Export2Bin_OverwriteFiles", true).toBool());
 
@@ -510,7 +523,8 @@ void mlMainWindow::UpdateDB()
 		return;
 
 	QList<QPair<QString, QStringList>> Commands;
-	Commands.append(QPair<QString, QStringList>(QString("%1/gdtdb/gdtdb.exe").arg(mToolsPath), QStringList() << "/update"));
+	Commands.append(QPair<QString, QStringList>(QString("%1/gdtdb/gdtdb.exe").arg(mToolsPath),
+	                                            QStringList() << "/update"));
 
 	StartBuildThread(Commands);
 }
@@ -562,7 +576,7 @@ void mlMainWindow::PopulateFileList()
 	QStringList Mods = QDir(ModsFolder).entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
 	QTreeWidgetItem* ModsRootItem = new QTreeWidgetItem(mFileListWidget, QStringList() << "Mods");
 	ModsRootItem->setFont(0, Font);
-	const char* Files[4] = { "core_mod", "mp_mod", "cp_mod", "zm_mod" };
+	const char* Files[4] = {"core_mod", "mp_mod", "cp_mod", "zm_mod"};
 
 	for (QString ModName : Mods)
 	{
@@ -633,7 +647,8 @@ void mlMainWindow::OnFileLevelEditor()
 	if (ItemList.count() && ItemList[0]->data(0, Qt::UserRole).toInt() == ML_ITEM_MAP)
 	{
 		QString MapName = ItemList[0]->text(0);
-		Process->start(QString("%1/bin/radiant_modtools.exe").arg(mToolsPath), QStringList() << QString("%1/map_source/%2/%3.map").arg(mGamePath, MapName.left(2), MapName));
+		Process->start(QString("%1/bin/radiant_modtools.exe").arg(mToolsPath),
+		               QStringList() << QString("%1/map_source/%2/%3.map").arg(mGamePath, MapName.left(2), MapName));
 	}
 	else
 	{
@@ -716,19 +731,21 @@ void mlMainWindow::OnFileNew()
 
 	QString Template = Templates[TemplateWidget->currentIndex()];
 
-	if ((Template == "MP Mod Level" && !MapName.startsWith("mp_")) || (Template == "ZM Mod Level" && !MapName.startsWith("zm_")))
+	if ((Template == "MP Mod Level" && !MapName.startsWith("mp_")) || (Template == "ZM Mod Level" && !MapName.
+		startsWith("zm_")))
 	{
 		QMessageBox::information(this, "Error", "Map name must start with 'mp_' or 'zm_'.");
 		return;
 	}
 
-	std::function<bool(const QString&, const QString&)> RecursiveCopy=[&](const QString& SourcePath, const QString& DestPath) -> bool
+	std::function<bool(const QString&, const QString&)> RecursiveCopy = [&
+		](const QString& SourcePath, const QString& DestPath) -> bool
 	{
 		QDir Dir(SourcePath);
 		if (!Dir.exists())
 			return false;
 
-		foreach (QString DirEntry, Dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+		foreach(QString DirEntry, Dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
 		{
 			QString NewPath = QString(DestPath + QDir::separator() + DirEntry).replace(QString("template"), MapName);
 			Dir.mkpath(NewPath);
@@ -736,10 +753,11 @@ void mlMainWindow::OnFileNew()
 				return false;
 		}
 
-		foreach (QString DirEntry, Dir.entryList(QDir::Files))
+		foreach(QString DirEntry, Dir.entryList(QDir::Files))
 		{
 			QFile SourceFile(SourcePath + QDir::separator() + DirEntry);
-			QString DestFileName = QString(DestPath + QDir::separator() + DirEntry).replace(QString("template"), MapName);
+			QString DestFileName = QString(DestPath + QDir::separator() + DirEntry).replace(
+				QString("template"), MapName);
 			QFile DestFile(DestFileName);
 
 			if (!SourceFile.open(QFile::ReadOnly) || !DestFile.open(QFile::WriteOnly))
@@ -752,7 +770,8 @@ void mlMainWindow::OnFileNew()
 				if (Line.contains("guid"))
 				{
 					QString LineString(Line);
-					LineString.replace(QRegExp("guid \"\\{(.*)\\}\""), QString("guid \"%1\"").arg(QUuid::createUuid().toString()));
+					LineString.replace(QRegExp("guid \"\\{(.*)\\}\""),
+					                   QString("guid \"%1\"").arg(QUuid::createUuid().toString()));
 					Line = LineString.toLatin1();
 				}
 				else
@@ -767,7 +786,8 @@ void mlMainWindow::OnFileNew()
 		return true;
 	};
 
-	if (RecursiveCopy(TemplatesFolder.absolutePath() + QDir::separator() + Templates[TemplateWidget->currentIndex()], QDir::cleanPath(mGamePath)))
+	if (RecursiveCopy(TemplatesFolder.absolutePath() + QDir::separator() + Templates[TemplateWidget->currentIndex()],
+	                  QDir::cleanPath(mGamePath)))
 	{
 		PopulateFileList();
 
@@ -792,14 +812,15 @@ void mlMainWindow::OnEditBuild()
 	{
 		if (!UpdateAdded)
 		{
-			Commands.append(QPair<QString, QStringList>(QString("%1/gdtdb/gdtdb.exe").arg(mToolsPath), QStringList() << "/update"));
+			Commands.append(QPair<QString, QStringList>(QString("%1/gdtdb/gdtdb.exe").arg(mToolsPath),
+			                                            QStringList() << "/update"));
 			UpdateAdded = true;
 		}
 	};
 
 	QList<QTreeWidgetItem*> CheckedItems;
 
-	std::function<void (QTreeWidgetItem*)> SearchCheckedItems=[&](QTreeWidgetItem* ParentItem) -> void
+	std::function<void (QTreeWidgetItem*)> SearchCheckedItems = [&](QTreeWidgetItem* ParentItem) -> void
 	{
 		for (int ChildIdx = 0; ChildIdx < ParentItem->childCount(); ChildIdx++)
 		{
@@ -819,8 +840,9 @@ void mlMainWindow::OnEditBuild()
 
 	if (mBuildLanguage != "All")
 		LanguageArgs << "-language" << mBuildLanguage;
-	else for (const QString& Language : gLanguages)
-		LanguageArgs << "-language" << Language;
+	else
+		for (const QString& Language : gLanguages)
+			LanguageArgs << "-language" << Language;
 
 	for (QTreeWidgetItem* Item : CheckedItems)
 	{
@@ -869,15 +891,18 @@ void mlMainWindow::OnEditBuild()
 					break;
 				}
 
-				Args << "+localprobes" << "+forceclean" << "+recompute" << QString("%1/map_source/%2/%3.map").arg(mGamePath, MapName.left(2), MapName);
-				Commands.append(QPair<QString, QStringList>(QString("%1/bin/radiant_modtools.exe").arg(mToolsPath), Args));
+				Args << "+localprobes" << "+forceclean" << "+recompute" << QString("%1/map_source/%2/%3.map").arg(
+					mGamePath, MapName.left(2), MapName);
+				Commands.append(
+					QPair<QString, QStringList>(QString("%1/bin/radiant_modtools.exe").arg(mToolsPath), Args));
 			}
 
 			if (mLinkEnabledWidget->isChecked())
 			{
 				AddUpdateDBCommand();
 
-				Commands.append(QPair<QString, QStringList>(QString("%1/bin/linker_modtools.exe").arg(mToolsPath), QStringList() << LanguageArgs << "-modsource" << MapName));
+				Commands.append(QPair<QString, QStringList>(QString("%1/bin/linker_modtools.exe").arg(mToolsPath),
+				                                            QStringList() << LanguageArgs << "-modsource" << MapName));
 			}
 
 			LastMap = MapName;
@@ -891,7 +916,9 @@ void mlMainWindow::OnEditBuild()
 				AddUpdateDBCommand();
 
 				QString ZoneName = Item->text(0);
-				Commands.append(QPair<QString, QStringList>(QString("%1/bin/linker_modtools.exe").arg(mToolsPath), QStringList() << LanguageArgs << "-fs_game" << ModName << "-modsource" << ZoneName));
+				Commands.append(QPair<QString, QStringList>(QString("%1/bin/linker_modtools.exe").arg(mToolsPath),
+				                                            QStringList() << LanguageArgs << "-fs_game" << ModName <<
+				                                            "-modsource" << ZoneName));
 			}
 
 			LastMod = ModName;
@@ -902,7 +929,7 @@ void mlMainWindow::OnEditBuild()
 	{
 		QStringList Args;
 
-		if(!mRunDvars.isEmpty())
+		if (!mRunDvars.isEmpty())
 			Args << mRunDvars;
 
 		Args << "+set" << "fs_game" << (LastMod.isEmpty() ? LastMap : LastMod);
@@ -917,9 +944,10 @@ void mlMainWindow::OnEditBuild()
 		Commands.append(QPair<QString, QStringList>(QString("%1/BlackOps3.exe").arg(mGamePath), Args));
 	}
 
-	if (Commands.size() == 0 && !UpdateAdded)
+	if (Commands.empty() && !UpdateAdded)
 	{
-		QMessageBox::information(this, "No Tasks", "Please selected at least one file from the list and one action to be performed.");
+		QMessageBox::information(this, "No Tasks",
+		                         "Please selected at least one file from the list and one action to be performed.");
 		return;
 	}
 
@@ -928,7 +956,8 @@ void mlMainWindow::OnEditBuild()
 
 void mlMainWindow::OnEditPublish()
 {
-	std::function<QTreeWidgetItem* (QTreeWidgetItem*)> SearchCheckedItem=[&](QTreeWidgetItem* ParentItem) -> QTreeWidgetItem*
+	std::function<QTreeWidgetItem*(QTreeWidgetItem*)> SearchCheckedItem = [&
+		](QTreeWidgetItem* ParentItem) -> QTreeWidgetItem*
 	{
 		for (int ChildIdx = 0; ChildIdx < ParentItem->childCount(); ChildIdx++)
 		{
@@ -1005,7 +1034,8 @@ void mlMainWindow::OnUGCRequestUGCDetails(SteamUGCRequestUGCDetailsResult_t* Req
 {
 	if (IOFailure || RequestDetailsResult->m_details.m_eResult != k_EResultOK)
 	{
-		QMessageBox::warning(this, "Error", "Error retrieving item data from the Steam Workshop.\nWorkshop item possibly deleted.");
+		QMessageBox::warning(this, "Error",
+		                     "Error retrieving item data from the Steam Workshop.\nWorkshop item possibly deleted.");
 		return;
 	}
 
@@ -1105,7 +1135,8 @@ void mlMainWindow::ShowPublishDialog()
 
 	if (!SteamUGC())
 	{
-		QMessageBox::information(this, "Error", "Could not initialize Steam, make sure you're running the launcher from the Steam client.");
+		QMessageBox::information(this, "Error",
+		                         "Could not initialize Steam, make sure you're running the launcher from the Steam client.");
 		return;
 	}
 
@@ -1212,8 +1243,8 @@ void mlMainWindow::OnEditDvars()
 
 	Layout->addWidget(ButtonBox);
 
-	for(int DvarIdx = 0; DvarIdx < ARRAYSIZE(gDvars); DvarIdx++)
-		Dvar(gDvars[DvarIdx], DvarTree);
+	for (const auto& gDvar : gDvars)
+		Dvar(gDvar, DvarTree);
 
 	connect(ButtonBox, SIGNAL(accepted()), &Dialog, SLOT(accept()));
 	connect(ButtonBox, SIGNAL(rejected()), &Dialog, SLOT(reject()));
@@ -1227,12 +1258,13 @@ void mlMainWindow::OnEditDvars()
 	QTreeWidgetItemIterator it(DvarTree);
 
 	mRunDvars.clear();
+
 	while (*it && size < ARRAYSIZE(gDvars))
 	{
 		QWidget* widget = DvarTree->itemWidget(*it, 1);
 		dvarName = (*it)->data(0, 0).toString();
 		dvar_s dvar = Dvar::findDvar(dvarName, DvarTree, gDvars, ARRAYSIZE(gDvars));
-		switch(dvar.type)
+		switch (dvar.type)
 		{
 		case DVAR_VALUE_BOOL:
 			dvarValue = Dvar::setDvarSetting(dvar, (QCheckBox*)widget);
@@ -1245,11 +1277,11 @@ void mlMainWindow::OnEditDvars()
 			break;
 		}
 
-		if(!dvarValue.toLatin1().isEmpty())
+		if (!dvarValue.toLatin1().isEmpty())
 		{
-			if(!dvar.isCmd)
+			if (!dvar.isCmd)
 				mRunDvars << "+set" << dvarName;
-			else			// hack for cmds
+			else // hack for cmds
 				mRunDvars << QString("+%1").arg(dvarName);
 			mRunDvars << dvarValue;
 		}
@@ -1315,40 +1347,57 @@ void mlMainWindow::UpdateWorkshopItem()
 
 	QProgressDialog Dialog(this);
 	Dialog.setLabelText(QString("Uploading workshop item '%1'...").arg(QString::number(mFileId)));
-	Dialog.setCancelButton(NULL);
+	Dialog.setCancelButton(nullptr);
 	Dialog.setWindowModality(Qt::WindowModal);
-	Dialog.setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+	Dialog.setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 	Dialog.show();
 
 	for (;;)
 	{
 		uint64 Processed, Total;
 
+		//if(Dialog.wasCanceled())
+		//{
+		//	QMessageBox::warning(this, "Error", QString{"Uploading workshop item was cancelled."});
+		//	break;
+		//}
+
 		const auto status = SteamUGC()->GetItemUpdateProgress(SteamAPICall, &Processed, &Total);
-		switch(status)
+		// if we get an invalid status exit out, it could mean we're finished or there's an actual problem
+		if (status == k_EItemUpdateStatusInvalid)
+			break;
+
+		switch (status)
 		{
 		case EItemUpdateStatus::k_EItemUpdateStatusInvalid:
-			Dialog.setLabelText(QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Invalid"}));
+			Dialog.setLabelText(
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Invalid"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusPreparingConfig:
-			Dialog.setLabelText(QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{ "Preparing Config" }));
+			Dialog.setLabelText(
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Preparing Config"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusPreparingContent:
-			Dialog.setLabelText(QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{ "Preparing Content" }));
+			Dialog.setLabelText(
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
+				                                                QString{"Preparing Content"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusUploadingContent:
-			Dialog.setLabelText(QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{ "Uploading Content" }));
+			Dialog.setLabelText(
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
+				                                                QString{"Uploading Content"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusUploadingPreviewFile:
-			Dialog.setLabelText(QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{ "Uploading Preview file" }));
+			Dialog.setLabelText(
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
+				                                                QString{"Uploading Preview file"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusCommittingChanges:
-			Dialog.setLabelText(QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{ "Committing changes" }));
+			Dialog.setLabelText(
+				QString("Uploading workshop item '%1': %2").
+				arg(QString::number(mFileId), QString{"Committing changes"}));
 			break;
 		}
-		// if we get an invalid status, exit out
-		if ( status == k_EItemUpdateStatusInvalid )
-			break;
 
 		Dialog.setMaximum(Total);
 		Dialog.setValue(Processed);
@@ -1367,7 +1416,10 @@ void mlMainWindow::OnCreateItemResult(CreateItemResult_t* CreateItemResult, bool
 
 	if (CreateItemResult->m_eResult != k_EResultOK)
 	{
-		QMessageBox::warning(this, "Error", QString("Error creating Steam Workshop item. Error code: %1\nVisit https://steamerrors.com/ for more information.").arg(CreateItemResult->m_eResult));
+		QMessageBox::warning(this, "Error",
+		                     QString(
+			                     "Error creating Steam Workshop item. Error code: %1\nVisit https://steamerrors.com/ for more information.")
+		                     .arg(CreateItemResult->m_eResult));
 		return;
 	}
 
@@ -1386,12 +1438,19 @@ void mlMainWindow::OnUpdateItemResult(SubmitItemUpdateResult_t* UpdateItemResult
 
 	if (UpdateItemResult->m_eResult != k_EResultOK)
 	{
-		QMessageBox::warning(this, "Error", QString("Error updating Steam Workshop item. Error code: %1\nVisit https://steamerrors.com/ for more information.").arg(UpdateItemResult->m_eResult));
+		QMessageBox::warning(this, "Error",
+		                     QString(
+			                     "Error updating Steam Workshop item. Error code: %1\nVisit https://steamerrors.com/ for more information.")
+		                     .arg(UpdateItemResult->m_eResult));
 		return;
 	}
 
-	if (QMessageBox::question(this, "Update", "Workshop item successfully updated. Do you want to visit the Workshop page for this item now?", QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
-		ShellExecute(nullptr, L"open", QString("steam://url/CommunityFilePage/%1").arg(QString::number(mFileId)).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+	if (QMessageBox::question(this, "Update",
+	                          "Workshop item successfully updated. Do you want to visit the Workshop page for this item now?",
+	                          QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+		ShellExecute(nullptr, L"open",
+		             QString("steam://url/CommunityFilePage/%1").arg(QString::number(mFileId)).toStdWString().c_str(),
+		             L"", NULL, SW_SHOWDEFAULT);
 }
 
 void mlMainWindow::OnHelpAbout()
@@ -1404,19 +1463,23 @@ void mlMainWindow::OnOpenZoneFile()
 	QList<QTreeWidgetItem*> ItemList = mFileListWidget->selectedItems();
 	if (ItemList.isEmpty())
 		return;
-	
+
 	QTreeWidgetItem* Item = ItemList[0];
 
 	if (Item->data(0, Qt::UserRole).toInt() == ML_ITEM_MAP)
 	{
 		QString MapName = Item->text(0);
-		ShellExecute(nullptr, L"open", QString("\"%1/usermaps/%2/zone_source/%3.zone\"").arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+		ShellExecute(nullptr, L"open",
+		             QString("\"%1/usermaps/%2/zone_source/%3.zone\"")
+		             .arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
 	}
 	else
 	{
 		QString ModName = Item->parent()->text(0);
 		QString ZoneName = Item->text(0);
-		ShellExecute(nullptr, L"open", QString("\"%1/mods/%2/zone_source/%3.zone\"").arg(mGamePath, ModName, ZoneName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+		ShellExecute(nullptr, L"open",
+		             QString("\"%1/mods/%2/zone_source/%3.zone\"")
+		             .arg(mGamePath, ModName, ZoneName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
 	}
 }
 
@@ -1431,12 +1494,15 @@ void mlMainWindow::OnOpenModRootFolder()
 	if (Item->data(0, Qt::UserRole).toInt() == ML_ITEM_MAP)
 	{
 		QString MapName = Item->text(0);
-		ShellExecute(nullptr, L"open", QString("\"%1/usermaps/%2\"").arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+		ShellExecute(nullptr, L"open",
+		             QString("\"%1/usermaps/%2\"").arg(mGamePath, MapName, MapName).toStdWString().c_str(), L"", NULL,
+		             SW_SHOWDEFAULT);
 	}
 	else
 	{
 		QString ModName = Item->parent() ? Item->parent()->text(0) : Item->text(0);
-		ShellExecute(nullptr, L"open", QString("\"%1/mods/%2\"").arg(mGamePath, ModName).toStdWString().c_str(), L"", NULL, SW_SHOWDEFAULT);
+		ShellExecute(nullptr, L"open", QString("\"%1/mods/%2\"").arg(mGamePath, ModName).toStdWString().c_str(), L"",
+		             NULL, SW_SHOWDEFAULT);
 	}
 }
 
@@ -1450,7 +1516,7 @@ void mlMainWindow::OnRunMapOrMod()
 
 	QStringList Args;
 
-	if(!mRunDvars.isEmpty())
+	if (!mRunDvars.isEmpty())
 		Args << mRunDvars;
 
 	Args << "+set" << "fs_game";
@@ -1510,11 +1576,14 @@ void mlMainWindow::OnCleanXPaks()
 
 	if (fileList.count() == 0)
 	{
-		QMessageBox::information(this, QString("Clean XPaks (%1)").arg(relativeFolder), QString("There are no XPak's to clean!"));
+		QMessageBox::information(this, QString("Clean XPaks (%1)").arg(relativeFolder),
+		                         QString("There are no XPak's to clean!"));
 		return;
 	}
 
-	if (QMessageBox::question(this, QString("Clean XPaks (%1)").arg(relativeFolder), QString("Are you sure you want to delete the following files?" + fileListString), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
+	if (QMessageBox::question(this, QString("Clean XPaks (%1)").arg(relativeFolder),
+	                          QString("Are you sure you want to delete the following files?" + fileListString),
+	                          QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
 		return;
 
 	for (auto file : fileList)
@@ -1544,7 +1613,9 @@ void mlMainWindow::OnDelete()
 		Folder = QString("%1/mods/%2").arg(mGamePath, ModName);
 	}
 
-	if (QMessageBox::question(this, "Delete Folder", QString("Are you sure you want to delete the folder '%1' and all of its contents?").arg(Folder), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
+	if (QMessageBox::question(this, "Delete Folder",
+	                          QString("Are you sure you want to delete the folder '%1' and all of its contents?").
+	                          arg(Folder), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
 		return;
 
 	QDir(Folder).removeRecursively();
@@ -1553,7 +1624,8 @@ void mlMainWindow::OnDelete()
 
 void mlMainWindow::OnExport2BinChooseDirectory()
 {
-	const QString dir = QFileDialog::getExistingDirectory(mExport2BinGUIWidget, tr("Open Directory"), mToolsPath, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	const QString dir = QFileDialog::getExistingDirectory(mExport2BinGUIWidget, tr("Open Directory"), mToolsPath,
+	                                                      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 	this->mExport2BinTargetDirWidget->setText(dir);
 
 	QSettings Settings;
@@ -1578,7 +1650,8 @@ void mlMainWindow::BuildFinished()
 	mBuildThread = NULL;
 }
 
-Export2BinGroupBox::Export2BinGroupBox(QWidget* parent, mlMainWindow* parent_window) : QGroupBox(parent), parentWindow(parent_window)
+Export2BinGroupBox::Export2BinGroupBox(QWidget* parent, mlMainWindow* parent_window) : QGroupBox(parent),
+                                                                                       parentWindow(parent_window)
 {
 	this->setAcceptDrops(true);
 }
@@ -1607,7 +1680,7 @@ void Export2BinGroupBox::dropEvent(QDropEvent* event)
 		{
 			pathList.append(urlList.at(i).toLocalFile());
 		}
-		
+
 		QProcess* Process = new QProcess();
 		connect(Process, SIGNAL(finished(int)), Process, SLOT(deleteLater()));
 
@@ -1615,7 +1688,7 @@ void Export2BinGroupBox::dropEvent(QDropEvent* event)
 
 		QString outputDir = parentWindow->mExport2BinTargetDirWidget->text();
 		parentWindow->StartConvertThread(pathList, outputDir, allowOverwrite);
-		
+
 		event->acceptProposedAction();
 	}
 }
