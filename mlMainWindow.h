@@ -23,7 +23,7 @@ class mlBuildThread : public QThread
 	Q_OBJECT
 
 public:
-	mlBuildThread(const QList<QPair<QString, QStringList>>& Commands, bool IgnoreErrors);
+	mlBuildThread(QList<QPair<QString, QStringList>> Commands, bool IgnoreErrors);
 	void run();
 	bool Succeeded() const
 	{
@@ -83,7 +83,7 @@ class mlMainWindow : public QMainWindow
 
 public:
 	mlMainWindow();
-	~mlMainWindow() {};
+	~mlMainWindow() {}
 
 	void UpdateDB();
 
@@ -98,25 +98,26 @@ public:
 
 protected slots:
 	void OnFileNew();
-	void OnFileAssetEditor();
+	void OnFileAssetEditor() const;
 	void OnFileLevelEditor();
 	void OnFileExport2Bin();
 	void OnEditBuild();
 	void OnEditPublish();
 	void OnEditOptions();
 	void OnEditDvars();
+	void OnSaveLog() const;
 	void OnHelpAbout();
 	void OnOpenZoneFile();
 	void OnOpenModRootFolder();
 	void OnRunMapOrMod();
 	void OnCleanXPaks();
 	void OnDelete();
-	void OnExport2BinChooseDirectory();
-	void OnExport2BinToggleOverwriteFiles();
-	void BuildOutputReady(QString Output);
+	void OnExport2BinChooseDirectory() const;
+	void OnExport2BinToggleOverwriteFiles() const;
+	void BuildOutputReady(const QString& Output) const;
 	void BuildFinished();
-	void ContextMenuRequested();
-	void SteamUpdate();
+	void ContextMenuRequested() const;
+	static void SteamUpdate();
 
 protected:
 	void closeEvent(QCloseEvent* Event);
@@ -124,10 +125,10 @@ protected:
 	void StartBuildThread(const QList<QPair<QString, QStringList>>& Commands);
 	void mlMainWindow::StartConvertThread(QStringList& pathList, QString& outputDir, bool allowOverwrite);
 
-	void PopulateFileList();
+	void PopulateFileList() const;
 	void UpdateWorkshopItem();
 	void ShowPublishDialog();
-	void UpdateTheme();
+	void UpdateTheme() const;
 
 	void CreateActions();
 	void CreateMenu();
@@ -150,6 +151,7 @@ protected:
 
 	QPushButton* mBuildButton;
 	QPushButton* mDvarsButton;
+	QPushButton* mLogButton;
 	QCheckBox* mCompileEnabledWidget;
 	QComboBox* mCompileModeWidget;
 	QCheckBox* mLightEnabledWidget;

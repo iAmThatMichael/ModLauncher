@@ -70,6 +70,7 @@
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>5.15 64bit</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
+    <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>5.15 64bit</QtInstall>
