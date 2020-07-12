@@ -81,7 +81,7 @@ void mlBuildThread::run()
 			Sleep(100);
 
 			if (Process->waitForReadyRead(0))
-				emit OutputReady(Process->readAll());
+			emit OutputReady(Process->readAll());
 
 			const auto State = Process->state();
 			if (State == QProcess::NotRunning)
@@ -462,7 +462,7 @@ void mlMainWindow::CreateToolBar()
 
 void mlMainWindow::InitExport2BinGUI()
 {
-	auto* dock = new QDockWidget(this, nullptr);
+	auto* dock = new QDockWidget(this);
 	dock->setWindowTitle("Export2Bin");
 	dock->setFloating(true);
 
@@ -483,7 +483,7 @@ void mlMainWindow::InitExport2BinGUI()
 	mExport2BinOverwriteWidget = new QCheckBox("&Overwrite Existing Files", widget);
 	gridLayout->addWidget(mExport2BinOverwriteWidget, 1, 0);
 
-	auto Settings = QSettings{};
+	const auto Settings = QSettings{};
 	mExport2BinOverwriteWidget->setChecked(Settings.value("Export2Bin_OverwriteFiles", true).toBool());
 
 	auto* dirLayout = new QHBoxLayout();
@@ -619,12 +619,12 @@ void mlMainWindow::ContextMenuRequested() const
 		return;
 
 	auto* Item = ItemList[0];
-	auto ItemType = (Item->data(0, Qt::UserRole).toInt() == ML_ITEM_MAP) ? "Map" : "Mod";
+	const auto* ItemType = (Item->data(0, Qt::UserRole).toInt() == ML_ITEM_MAP) ? "Map" : "Mod";
 
 	if (Item->data(0, Qt::UserRole).toInt() == ML_ITEM_UNKNOWN)
 		return;
 
-	auto GameIcon = QIcon{ ":/resources/BlackOps3.png" };
+	const auto GameIcon = QIcon{":/resources/BlackOps3.png"};
 
 	auto* Menu = new QMenu;
 	Menu->addAction(GameIcon, QString("Run %1").arg(ItemType), this, SLOT(OnRunMapOrMod()));
@@ -680,7 +680,7 @@ void mlMainWindow::OnFileExport2Bin()
 
 void mlMainWindow::OnFileNew()
 {
-	auto TemplatesFolder = QDir{QString("%1/rex/templates").arg(mToolsPath)};
+	const auto TemplatesFolder = QDir{QString("%1/rex/templates").arg(mToolsPath)};
 	auto Templates = TemplatesFolder.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
 
 	if (Templates.isEmpty())
@@ -724,7 +724,7 @@ void mlMainWindow::OnFileNew()
 	if (Dialog.exec() != QDialog::Accepted)
 		return;
 
-	auto Name = NameWidget->text();
+	const auto Name = NameWidget->text();
 
 	if (Name.isEmpty())
 	{
@@ -741,7 +741,7 @@ void mlMainWindow::OnFileNew()
 	auto MapName = NameWidget->text().toLatin1().toLower();
 	auto Output = QString{};
 
-	auto Template = Templates[TemplateWidget->currentIndex()];
+	const auto Template = Templates[TemplateWidget->currentIndex()];
 
 	if ((Template == "MP Mod Level" && !MapName.startsWith("mp_")) || (Template == "ZM Mod Level" && !MapName.
 		startsWith("zm_")))
@@ -752,24 +752,27 @@ void mlMainWindow::OnFileNew()
 
 	std::function<bool(const QString&, const QString&)> RecursiveCopy = [&](const QString& SourcePath, const QString& DestPath) -> bool
 	{
-		auto Dir = QDir{SourcePath};
+		const auto Dir = QDir{SourcePath};
 		if (!Dir.exists())
 			return false;
 
 
 		foreach(auto DirEntry, Dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
 		{
-			auto NewPath = QString(DestPath + QDir::separator() + DirEntry).replace(QString("template"), MapName);
-			Dir.mkpath(NewPath);
+			const auto NewPath = QString(DestPath + QDir::separator() + DirEntry).replace(QString("template"), MapName);
+
+			if (!Dir.mkpath(NewPath))
+				return false;
+
 			if (!RecursiveCopy(SourcePath + QDir::separator() + DirEntry, NewPath))
 				return false;
 		}
 
 		foreach(auto DirEntry, Dir.entryList(QDir::Files))
 		{
-			auto SourceFile = QFile{ SourcePath + QDir::separator() + DirEntry };
-			auto DestFileName = QString{ DestPath + QDir::separator() + DirEntry }.replace(QString("template"), MapName);
-			auto DestFile = QFile{ DestFileName };
+			auto SourceFile = QFile{SourcePath + QDir::separator() + DirEntry};
+			auto DestFileName = QString{DestPath + QDir::separator() + DirEntry}.replace(QString("template"), MapName);
+			auto DestFile = QFile{DestFileName};
 
 			if (!SourceFile.open(QFile::ReadOnly) || !DestFile.open(QFile::WriteOnly))
 				return false;
@@ -780,7 +783,7 @@ void mlMainWindow::OnFileNew()
 
 				if (Line.contains("guid"))
 				{
-					auto LineString = QString{ Line };
+					auto LineString = QString{Line};
 					LineString.replace(QRegExp(R"(guid "\{(.*)\}")"),
 					                   QString("guid \"%1\"").arg(QUuid::createUuid().toString()));
 					Line = LineString.toLatin1();
@@ -1033,7 +1036,7 @@ void mlMainWindow::OnEditPublish()
 	}
 
 	mWorkshopFolder = QString("%1/%2/zone").arg(mGamePath, Folder);
-	auto File = QFile{ mWorkshopFolder + "/workshop.json" };
+	auto File = QFile{mWorkshopFolder + "/workshop.json"};
 
 	if (!QFileInfo(mWorkshopFolder).isDir())
 	{
@@ -1049,7 +1052,7 @@ void mlMainWindow::OnEditPublish()
 
 	if (File.open(QIODevice::ReadOnly))
 	{
-		auto Document = QJsonDocument::fromJson(File.readAll());
+		const auto Document = QJsonDocument::fromJson(File.readAll());
 		auto Root = Document.object();
 
 		mFileId = Root["PublisherID"].toString().toULongLong();
@@ -1061,7 +1064,7 @@ void mlMainWindow::OnEditPublish()
 
 	if (mFileId != 0u)
 	{
-		auto SteamAPICall = SteamUGC()->RequestUGCDetails(mFileId, 10);
+		const auto SteamAPICall = SteamUGC()->RequestUGCDetails(mFileId, 10);
 		mSteamCallResultRequestDetails.Set(SteamAPICall, this, &mlMainWindow::OnUGCRequestUGCDetails);
 	}
 	else
@@ -1090,7 +1093,7 @@ void mlMainWindow::OnUGCRequestUGCDetails(SteamUGCRequestUGCDetailsResult_t* Req
 
 void mlMainWindow::ShowPublishDialog()
 {
-	auto Dialog = QDialog{ this, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint };
+	auto Dialog = QDialog{this, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint};
 	Dialog.setWindowTitle("Publish Mod");
 
 	auto* Layout = new QVBoxLayout(&Dialog);
@@ -1128,7 +1131,7 @@ void mlMainWindow::ShowPublishDialog()
 	TagsTree->setRootIsDecorated(false);
 	FormLayout->addRow("Tags:", TagsTree);
 
-	for (auto Tag : gTags)
+	for (const auto* Tag : gTags)
 	{
 		auto* Item = new QTreeWidgetItem(TagsTree, QStringList() << Tag);
 		Item->setCheckState(0, mTags.contains(Tag) ? Qt::Checked : Qt::Unchecked);
@@ -1148,7 +1151,7 @@ void mlMainWindow::ShowPublishDialog()
 
 	auto ThumbnailBrowse = [=]()
 	{
-		QString FileName = QFileDialog::getOpenFileName(this, "Open Thumbnail", QString(), "All Files (*.*)");
+		const auto FileName = QFileDialog::getOpenFileName(this, "Open Thumbnail", QString(), "All Files (*.*)");
 		if (!FileName.isEmpty())
 		{
 			ThumbnailEdit->setText(FileName);
@@ -1187,7 +1190,7 @@ void mlMainWindow::ShowPublishDialog()
 
 	if (mFileId == 0u)
 	{
-		auto SteamAPICall = SteamUGC()->CreateItem(AppId, k_EWorkshopFileTypeCommunity);
+		const auto SteamAPICall = SteamUGC()->CreateItem(AppId, k_EWorkshopFileTypeCommunity);
 		mSteamCallResultCreateItem.Set(SteamAPICall, this, &mlMainWindow::OnCreateItemResult);
 	}
 	else
@@ -1198,7 +1201,7 @@ void mlMainWindow::ShowPublishDialog()
 
 void mlMainWindow::OnEditOptions()
 {
-	auto Dialog = QDialog{ this, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint };
+	auto Dialog = QDialog{this, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint};
 	Dialog.setWindowTitle("Options");
 
 	auto* Layout = new QVBoxLayout(&Dialog);
@@ -1271,7 +1274,7 @@ void mlMainWindow::UpdateTheme() const
 
 void mlMainWindow::OnEditDvars()
 {
-	auto Dialog = QDialog{ this, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint };
+	auto Dialog = QDialog{this, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint};
 	Dialog.setWindowTitle("Dvar Options");
 
 	auto* Layout = new QVBoxLayout(&Dialog);
@@ -1298,7 +1301,7 @@ void mlMainWindow::OnEditDvars()
 
 	for (const auto& gDvar : gDvars)
 	{
-		Dvar{ gDvar, DvarTree };
+		Dvar{gDvar, DvarTree};
 	}
 
 	connect(ButtonBox, SIGNAL(accepted()), &Dialog, SLOT(accept()));
@@ -1313,15 +1316,15 @@ void mlMainWindow::OnEditDvars()
 	auto settings = QSettings{};
 	auto dvarName = QString{};
 	auto dvarValue = QString{};
-	auto it = QTreeWidgetItemIterator{ DvarTree };
+	auto it = QTreeWidgetItemIterator{DvarTree};
 
 	mRunDvars.clear();
 
-	while (((*it) != nullptr) && size < ARRAYSIZE(gDvars))
+	while (((*it) != nullptr) && size < static_cast<int>(ARRAYSIZE(gDvars)))
 	{
-		QWidget* widget = DvarTree->itemWidget(*it, 1);
+		auto* widget = DvarTree->itemWidget(*it, 1);
 		dvarName = (*it)->data(0, 0).toString();
-		dvar_s dvar = Dvar::findDvar(dvarName, DvarTree, gDvars, ARRAYSIZE(gDvars));
+		const auto dvar = Dvar::findDvar(dvarName, DvarTree, gDvars, ARRAYSIZE(gDvars));
 		switch (dvar.type)
 		{
 		case DVAR_VALUE_BOOL:
@@ -1363,8 +1366,8 @@ void mlMainWindow::OnSaveLog() const
 	ss << time_str;
 	auto date_str = ss.str();
 	std::replace(date_str.begin(), date_str.end(), ':', '_');
-	
-	auto log = QFile{ QString{"modlog_%1.txt"}.arg(date_str.c_str()) };
+
+	auto log = QFile{QString{"modlog_%1.txt"}.arg(date_str.c_str())};
 
 	if (!log.open(QIODevice::WriteOnly))
 		return;
@@ -1372,7 +1375,8 @@ void mlMainWindow::OnSaveLog() const
 	auto stream = QTextStream(&log);
 	stream << mOutputWidget->toPlainText();
 
-	QMessageBox::information(nullptr, QString("Save Log"), QString("The console log has been saved to %1").arg(log.fileName()));
+	QMessageBox::information(nullptr, QString("Save Log"),
+	                         QString("The console log has been saved to %1").arg(log.fileName()));
 }
 
 void mlMainWindow::UpdateWorkshopItem()
@@ -1387,8 +1391,8 @@ void mlMainWindow::UpdateWorkshopItem()
 	Root["FolderName"] = mFolderName;
 	Root["Tags"] = mTags.join(',');
 
-	auto WorkshopFile = QString{ mWorkshopFolder + "/workshop.json" };
-	auto File = QFile{ WorkshopFile };
+	const auto WorkshopFile = QString{mWorkshopFolder + "/workshop.json"};
+	auto File = QFile{WorkshopFile};
 
 	if (!File.open(QIODevice::WriteOnly))
 	{
@@ -1399,7 +1403,7 @@ void mlMainWindow::UpdateWorkshopItem()
 	File.write(QJsonDocument(Root).toJson());
 	File.close();
 
-	auto UpdateHandle = SteamUGC()->StartItemUpdate(AppId, mFileId);
+	const auto UpdateHandle = SteamUGC()->StartItemUpdate(AppId, mFileId);
 	SteamUGC()->SetItemTitle(UpdateHandle, mTitle.toLatin1().constData());
 	SteamUGC()->SetItemDescription(UpdateHandle, mDescription.toLatin1().constData());
 	SteamUGC()->SetItemPreview(UpdateHandle, mThumbnail.toLatin1().constData());
@@ -1429,10 +1433,10 @@ void mlMainWindow::UpdateWorkshopItem()
 
 	SteamUGC()->SetItemTags(UpdateHandle, &Tags);
 
-	auto SteamAPICall = SteamUGC()->SubmitItemUpdate(UpdateHandle, "");
+	const auto SteamAPICall = SteamUGC()->SubmitItemUpdate(UpdateHandle, "");
 	mSteamCallResultUpdateItem.Set(SteamAPICall, this, &mlMainWindow::OnUpdateItemResult);
 
-	auto Dialog = QProgressDialog{ this };
+	auto Dialog = QProgressDialog{this};
 	Dialog.setLabelText(QString("Uploading workshop item '%1'...").arg(QString::number(mFileId)));
 	Dialog.setCancelButton(nullptr);
 	Dialog.setWindowModality(Qt::WindowModal);
@@ -1469,19 +1473,23 @@ void mlMainWindow::UpdateWorkshopItem()
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusPreparingContent:
 			Dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Preparing Content"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
+				                                                QString{"Preparing Content"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusUploadingContent:
 			Dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Uploading Content"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
+				                                                QString{"Uploading Content"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusUploadingPreviewFile:
 			Dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Uploading Preview file"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
+				                                                QString{"Uploading Preview file"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusCommittingChanges:
 			Dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Committing changes"}));
+				QString("Uploading workshop item '%1': %2").
+				arg(QString::number(mFileId), QString{"Committing changes"}));
 			break;
 		}
 
@@ -1621,17 +1629,17 @@ void mlMainWindow::OnRunMapOrMod()
 
 	if (Item->data(0, Qt::UserRole).toInt() == ML_ITEM_MAP)
 	{
-		auto MapName = Item->text(0);
+		const auto MapName = Item->text(0);
 		Args << MapName;
 		Args << "+devmap" << MapName;
 	}
 	else
 	{
-		auto ModName = Item->parent() != nullptr ? Item->parent()->text(0) : Item->text(0);
+		const auto ModName = Item->parent() != nullptr ? Item->parent()->text(0) : Item->text(0);
 		Args << ModName;
 	}
 
-	auto ExtraOptions = mRunOptionsWidget->text();
+	const auto ExtraOptions = mRunOptionsWidget->text();
 	if (!ExtraOptions.isEmpty())
 	{
 		Args << ExtraOptions.split(' ');
@@ -1665,7 +1673,7 @@ void mlMainWindow::OnCleanXPaks()
 	}
 
 	auto fileListString = QString{};
-	auto fileList  = QStringList{};
+	auto fileList = QStringList{};
 	QDirIterator it(Folder, QStringList() << "*.xpak", QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
@@ -1674,7 +1682,7 @@ void mlMainWindow::OnCleanXPaks()
 		fileListString.append("\n" + QDir(Folder).relativeFilePath(filepath));
 	}
 
-	auto relativeFolder = QDir(mGamePath).relativeFilePath(Folder);
+	const auto relativeFolder = QDir(mGamePath).relativeFilePath(Folder);
 
 	if (fileList.count() == 0)
 	{
@@ -1783,7 +1791,7 @@ void Export2BinGroupBox::dropEvent(QDropEvent* event)
 		auto pathList = QStringList{};
 		auto urlList = mimeData->urls();
 
-		auto working_dir = QDir{ parentWindow->mToolsPath };
+		auto working_dir = QDir{parentWindow->mToolsPath};
 		for (const auto& i : urlList)
 		{
 			pathList.append(i.toLocalFile());
@@ -1792,7 +1800,7 @@ void Export2BinGroupBox::dropEvent(QDropEvent* event)
 		auto* Process = new QProcess();
 		connect(Process, SIGNAL(finished(int)), Process, SLOT(deleteLater()));
 
-		auto allowOverwrite = this->parentWindow->mExport2BinOverwriteWidget->isChecked();
+		const auto allowOverwrite = this->parentWindow->mExport2BinOverwriteWidget->isChecked();
 
 		auto outputDir = parentWindow->mExport2BinTargetDirWidget->text();
 		parentWindow->StartConvertThread(pathList, outputDir, allowOverwrite);

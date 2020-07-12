@@ -3,7 +3,7 @@
 Dvar::Dvar(dvar_s _dvar, QTreeWidget* _dvarTree) : dvar(_dvar)
 {
 	const auto dvarSetting = QString("dvar_%1").arg(dvar.name);
-	auto settings = QSettings{};
+	const auto settings = QSettings{};
 
 	auto* Item = new QTreeWidgetItem(_dvarTree, QStringList() << dvar.name);
 	Item->setText(0, dvar.name);
