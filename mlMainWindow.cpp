@@ -481,7 +481,7 @@ void mlMainWindow::InitExport2BinGUI()
 	mExport2BinOverwriteWidget = new QCheckBox("&Overwrite Existing Files", widget);
 	gridLayout->addWidget(mExport2BinOverwriteWidget, 1, 0);
 
-	QSettings Settings;
+	auto Settings = QSettings{};
 	mExport2BinOverwriteWidget->setChecked(Settings.value("Export2Bin_OverwriteFiles", true).toBool());
 
 	auto* dirLayout = new QHBoxLayout();
@@ -1253,14 +1253,14 @@ void mlMainWindow::UpdateTheme() const
 	{
 		qApp->setStyle("Fusion");
 
-		QFile file(QString("%1/radiant/stylesheet.qss").arg(mToolsPath));
+		QFile file(":/stylesheet/darkmode.qss");
 		file.open(QFile::ReadOnly | QFile::Text);
 		QTextStream stream(&file);
 		qApp->setStyleSheet(stream.readAll());
 	}
 	else
 	{
-		qApp->setStyle("Fusion");
+		qApp->setStyle("WindowsVista");
 		qApp->setStyleSheet("");
 	}
 }

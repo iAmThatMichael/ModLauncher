@@ -11,5 +11,6 @@
         <file>stylesheet/stylesheet/checkbox.png</file>
         <file>stylesheet/stylesheet/down_arrow.png</file>
         <file>stylesheet/stylesheet/handle.png</file>
+		<file>stylesheet/darkmode.qss</file>
     </qresource>
 </RCC>
