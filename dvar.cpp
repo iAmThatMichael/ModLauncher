@@ -2,10 +2,10 @@
 
 Dvar::Dvar(dvar_s _dvar, QTreeWidget* _dvarTree) : dvar(_dvar)
 {
-	QString dvarSetting = QString("dvar_%1").arg(dvar.name);
-	QSettings settings;
+	const auto dvarSetting = QString("dvar_%1").arg(dvar.name);
+	auto settings = QSettings{};
 
-	QTreeWidgetItem* Item = new QTreeWidgetItem(_dvarTree, QStringList() << dvar.name);
+	auto* Item = new QTreeWidgetItem(_dvarTree, QStringList() << dvar.name);
 	Item->setText(0, dvar.name);
 	Item->setToolTip(0, dvar.description);
 
@@ -38,10 +38,6 @@ Dvar::Dvar(dvar_s _dvar, QTreeWidget* _dvarTree) : dvar(_dvar)
 		_dvarTree->setItemWidget(Item, 1, textBox);
 		break;
 	}
-}
-
-Dvar::~Dvar()
-{
 }
 
 dvar_s Dvar::findDvar(QString _dvarName, QTreeWidget* DvarTree, dvar_s* dvars, int DvarSize)

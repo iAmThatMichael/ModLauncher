@@ -25,7 +25,7 @@ private:
 public:
 	Dvar();
 	Dvar(dvar_s, QTreeWidget*);
-	~Dvar();
+	~Dvar() {};
 
 	static QString setDvarSetting(dvar_s, QCheckBox*);
 	static QString setDvarSetting(dvar_s, QSpinBox*);
