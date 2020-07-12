@@ -561,3 +561,19 @@ QSlider::handle:hover:horizontal, QSlider::groove:hover:horizontal, QSlider::han
 {
 	border: 1px solid #ffaa00;
 }
+/* changes in 2020 had to change these to match 3arc */ 
+QTreeWidget::indicator
+{
+	border: 1px solid #b1b1b1;
+	background: transparent;
+}
+/* load our checkbox image for when it's checked */
+QTreeWidget::indicator:checked
+{
+	image:url(:/stylesheet/stylesheet/checkbox.png);
+}
+/* remove border around QToolBar */
+QToolBar
+{
+	border: 0px;
+}
