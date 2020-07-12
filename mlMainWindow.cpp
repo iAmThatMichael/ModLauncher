@@ -253,7 +253,7 @@ void mlConvertThread::run()
 	}
 }
 
-mlMainWindow::mlMainWindow()
+mlMainWindow::mlMainWindow(QWidget* parent)
 {
 	auto Settings = QSettings{};
 
@@ -278,10 +278,10 @@ mlMainWindow::mlMainWindow()
 
 	mExport2BinGUIWidget = nullptr;
 
-	auto* CentralWidget = new QSplitter();
+	auto* CentralWidget = new QSplitter(parent);
 	CentralWidget->setOrientation(Qt::Vertical);
 
-	auto* TopWidget = new QWidget();
+	auto* TopWidget = new QWidget(parent);
 	CentralWidget->addWidget(TopWidget);
 
 	auto* TopLayout = new QHBoxLayout(TopWidget);
@@ -296,29 +296,31 @@ mlMainWindow::mlMainWindow()
 
 	connect(mFileListWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ContextMenuRequested()));
 
-	auto* ActionsLayout = new QVBoxLayout();
+	auto* ActionsLayout = new QVBoxLayout(parent);
 	TopLayout->addLayout(ActionsLayout);
 
-	auto* CompileLayout = new QHBoxLayout();
+	auto* CompileLayout = new QHBoxLayout(parent);
 	ActionsLayout->addLayout(CompileLayout);
 
 	mCompileEnabledWidget = new QCheckBox("Compile");
 	CompileLayout->addWidget(mCompileEnabledWidget);
 
-	mCompileModeWidget = new QComboBox();
+	mCompileModeWidget = new QComboBox(parent);
 	mCompileModeWidget->addItems(QStringList() << "Ents" << "Full");
 	mCompileModeWidget->setCurrentIndex(1);
+	mCompileModeWidget->setStyle(QStyleFactory::create("windows"));
 	CompileLayout->addWidget(mCompileModeWidget);
 
-	auto* LightLayout = new QHBoxLayout();
+	auto* LightLayout = new QHBoxLayout(parent);
 	ActionsLayout->addLayout(LightLayout);
 
 	mLightEnabledWidget = new QCheckBox("Light");
 	LightLayout->addWidget(mLightEnabledWidget);
 
-	mLightQualityWidget = new QComboBox();
+	mLightQualityWidget = new QComboBox(parent);
 	mLightQualityWidget->addItems(QStringList() << "Low" << "Medium" << "High");
 	mLightQualityWidget->setCurrentIndex(1);
+	mLightQualityWidget->setStyle(QStyleFactory::create("windows"));
 	mLightQualityWidget->setMinimumWidth(64); // Fix for "Medium" being cut off in the dark theme
 	LightLayout->addWidget(mLightQualityWidget);
 
@@ -328,7 +330,7 @@ mlMainWindow::mlMainWindow()
 	mRunEnabledWidget = new QCheckBox("Run");
 	ActionsLayout->addWidget(mRunEnabledWidget);
 
-	mRunOptionsWidget = new QLineEdit();
+	mRunOptionsWidget = new QLineEdit(parent);
 	mRunOptionsWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 	ActionsLayout->addWidget(mRunOptionsWidget);
 
@@ -701,6 +703,7 @@ void mlMainWindow::OnFileNew()
 
 	auto* TemplateWidget = new QComboBox();
 	TemplateWidget->addItems(Templates);
+	TemplateWidget->setStyle(QStyleFactory::create("windows"));
 	FormLayout->addRow("Template:", TemplateWidget);
 
 	auto* Frame = new QFrame();
@@ -1219,6 +1222,7 @@ void mlMainWindow::OnEditOptions()
 	auto* LanguageCombo = new QComboBox();
 	LanguageCombo->addItems(Languages);
 	LanguageCombo->setCurrentText(mBuildLanguage);
+	LanguageCombo->setStyle(QStyleFactory::create("windows"));
 	LanguageLayout->addWidget(LanguageCombo);
 
 	Layout->addLayout(LanguageLayout);

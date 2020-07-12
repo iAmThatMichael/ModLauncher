@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <QMainWindow>
+
 class mlBuildThread : public QThread
 {
 	Q_OBJECT
@@ -75,6 +77,13 @@ protected:
 	bool mIgnoreErrors;
 };
 
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+	class mlMainWindow;
+}
+QT_END_NAMESPACE
+
 class mlMainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -82,7 +91,7 @@ class mlMainWindow : public QMainWindow
 	friend class Export2BinGroupBox;
 
 public:
-	mlMainWindow();
+	mlMainWindow(QWidget* parent = nullptr);
 	~mlMainWindow() {}
 
 	void UpdateDB();
@@ -187,6 +196,9 @@ protected:
 	QString mToolsPath;
 
 	QStringList mRunDvars;
+
+private:
+	Ui::mlMainWindow* ui;
 };
 
 class Export2BinGroupBox : public QGroupBox
@@ -195,9 +207,9 @@ private:
 	mlMainWindow* parentWindow;
 
 protected:
-	void dragEnterEvent(QDragEnterEvent* event);
-	void dragLeaveEvent(QDragLeaveEvent* event);
-	void dropEvent(QDropEvent *event);
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dragLeaveEvent(QDragLeaveEvent* event) override;
+	void dropEvent(QDropEvent *event) override;
 
 public:
 	Export2BinGroupBox(QWidget *parent, mlMainWindow* parent_window);
