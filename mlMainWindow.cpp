@@ -362,6 +362,7 @@ mlMainWindow::mlMainWindow(QWidget* parent)
 	actionsLayout->addStretch(1);
 
 	mOutputWidget = new QPlainTextEdit(this);
+	mOutputWidget->setReadOnly(true);
 	centralWidget->addWidget(mOutputWidget);
 
 	setCentralWidget(centralWidget);
@@ -1480,23 +1481,19 @@ void mlMainWindow::UpdateWorkshopItem()
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusPreparingContent:
 			dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
-				                                                QString{"Preparing Content"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Preparing Content"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusUploadingContent:
 			dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
-				                                                QString{"Uploading Content"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Uploading Content"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusUploadingPreviewFile:
 			dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId),
-				                                                QString{"Uploading Preview file"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Uploading Preview file"}));
 			break;
 		case EItemUpdateStatus::k_EItemUpdateStatusCommittingChanges:
 			dialog.setLabelText(
-				QString("Uploading workshop item '%1': %2").
-				arg(QString::number(mFileId), QString{"Committing changes"}));
+				QString("Uploading workshop item '%1': %2").arg(QString::number(mFileId), QString{"Committing changes"}));
 			break;
 		}
 
@@ -1540,8 +1537,7 @@ void mlMainWindow::OnUpdateItemResult(SubmitItemUpdateResult_t* UpdateItemResult
 	if (UpdateItemResult->m_eResult != k_EResultOK)
 	{
 		QMessageBox::warning(this, "Error",
-		                     QString(
-			                     "Error updating Steam Workshop item. Error code: %1\nVisit https://steamerrors.com/ for more information.")
+		                     QString("Error updating Steam Workshop item. Error code: %1\nVisit https://steamerrors.com/ for more information.")
 		                     .arg(UpdateItemResult->m_eResult));
 		return;
 	}
@@ -1584,8 +1580,8 @@ void mlMainWindow::OnOpenZoneFile()
 		auto modName = item->parent()->text(0);
 		auto zoneName = item->text(0);
 		ShellExecute(nullptr, L"open",
-		             QString("\"%1/mods/%2/zone_source/%3.zone\"")
-		             .arg(mGamePath, modName, zoneName).toStdWString().c_str(), L"", nullptr, SW_SHOWDEFAULT);
+		             QString("\"%1/mods/%2/zone_source/%3.zone\"").arg(mGamePath, modName, zoneName).toStdWString().c_str(), 
+			L"", nullptr, SW_SHOWDEFAULT);
 	}
 }
 
@@ -1603,15 +1599,14 @@ void mlMainWindow::OnOpenModRootFolder()
 	{
 		auto mapName = item->text(0);
 		ShellExecute(nullptr, L"open",
-		             QString("\"%1/usermaps/%2\"").arg(mGamePath, mapName, mapName).toStdWString().c_str(), L"",
-		             nullptr,
-		             SW_SHOWDEFAULT);
+		             QString("\"%1/usermaps/%2\"").arg(mGamePath, mapName, mapName).toStdWString().c_str(),
+			L"", nullptr, SW_SHOWDEFAULT);
 	}
 	else
 	{
 		auto modName = item->parent() != nullptr ? item->parent()->text(0) : item->text(0);
-		ShellExecute(nullptr, L"open", QString("\"%1/mods/%2\"").arg(mGamePath, modName).toStdWString().c_str(), L"",
-		             nullptr, SW_SHOWDEFAULT);
+		ShellExecute(nullptr, L"open", QString("\"%1/mods/%2\"").arg(mGamePath, modName).toStdWString().c_str(), 
+			L"", nullptr, SW_SHOWDEFAULT);
 	}
 }
 
@@ -1683,7 +1678,7 @@ void mlMainWindow::OnCleanXPaks()
 	QDirIterator it(folder, QStringList() << "*.xpak", QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
-		QString filepath = it.next();
+		auto filepath = it.next();
 		fileList.append(filepath);
 		fileListString.append("\n" + QDir(folder).relativeFilePath(filepath));
 	}
@@ -1706,7 +1701,6 @@ void mlMainWindow::OnCleanXPaks()
 
 	for (const auto& file : fileList)
 	{
-		qDebug() << file;
 		QFile(file).remove();
 	}
 }
@@ -1734,8 +1728,8 @@ void mlMainWindow::OnDelete()
 	}
 
 	if (QMessageBox::question(this, "Delete Folder",
-	                          QString("Are you sure you want to delete the folder '%1' and all of its contents?").
-	                          arg(folder), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
+	                          QString("Are you sure you want to delete the folder '%1' and all of its contents?").arg(folder),
+							QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
 	{
 		return;
 	}
