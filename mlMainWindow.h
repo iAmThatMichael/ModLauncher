@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include <QMainWindow>
-
 class mlBuildThread : public QThread
 {
 	Q_OBJECT
