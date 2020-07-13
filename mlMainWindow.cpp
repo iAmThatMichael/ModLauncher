@@ -1365,8 +1365,18 @@ void mlMainWindow::OnEditDvars()
 
 void mlMainWindow::OnSaveLog() const
 {
-	// save file: modlog_<timestamp>.txt
-	// location: exe_root/logs/  (root/bin/logs)
+	// want to make a logs directory for easy management of launcher logs (exe_dir/logs)
+	const auto dir = QDir{};
+	if (!dir.exists("logs"))
+	{
+		const auto result = dir.mkdir("logs");
+		if (!result)
+		{
+			QMessageBox::warning(nullptr, "Error", QString("Could not create the \"logs\" directory"));
+			return;
+		}
+	}
+
 	const auto time = std::time(nullptr);
 	auto ss = std::stringstream{};
 	const auto timeStr = std::put_time(std::localtime(&time), "%F_%T");
@@ -1376,7 +1386,7 @@ void mlMainWindow::OnSaveLog() const
 	auto dateStr = ss.str();
 	std::replace(dateStr.begin(), dateStr.end(), ':', '_');
 
-	auto log = QFile{QString{"modlog_%1.txt"}.arg(dateStr.c_str())};
+	auto log = QFile{QString{"logs/modlog_%1.txt"}.arg(dateStr.c_str())};
 
 	if (!log.open(QIODevice::WriteOnly))
 		return;
