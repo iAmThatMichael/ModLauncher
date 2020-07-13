@@ -1559,7 +1559,7 @@ void mlMainWindow::OnUpdateItemResult(SubmitItemUpdateResult_t* UpdateItemResult
 
 void mlMainWindow::OnHelpAbout()
 {
-	QMessageBox::about(this, "About Mod Tools Launcher", "Treyarch Mod Tools Launcher\nCopyright 2016-2020 Treyarch");
+	QMessageBox::about(this, "About Mod Tools Launcher", "Treyarch Mod Tools Launcher\nCopyright 2016 Treyarch");
 }
 
 void mlMainWindow::OnOpenZoneFile()

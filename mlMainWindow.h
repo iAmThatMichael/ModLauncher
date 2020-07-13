@@ -79,7 +79,8 @@ protected:
 
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
+namespace ui
+{
 	class mlMainWindow;
 }
 QT_END_NAMESPACE
@@ -198,7 +199,7 @@ protected:
 	QStringList mRunDvars;
 
 private:
-	Ui::mlMainWindow* ui;
+	ui::mlMainWindow* ui;
 };
 
 class Export2BinGroupBox : public QGroupBox
