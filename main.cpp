@@ -21,16 +21,16 @@
 
 int main(int argc, char* argv[])
 {
-	QApplication App(argc, argv);
+	QApplication app(argc, argv);
 
 	QCoreApplication::setOrganizationDomain("treyarch.com");
 	QCoreApplication::setOrganizationName("Treyarch");
 	QCoreApplication::setApplicationName("ModLauncher");
 	//QCoreApplication::setApplicationVersion();
 
-	mlMainWindow MainWindow;
-	MainWindow.UpdateDB();
-	MainWindow.show();
+	mlMainWindow mainWindow;
+	mainWindow.UpdateDB();
+	mainWindow.show();
 
-	return App.exec();
+	return app.exec();
 }

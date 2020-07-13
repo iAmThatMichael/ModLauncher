@@ -92,7 +92,7 @@ class mlMainWindow : public QMainWindow
 
 public:
 	mlMainWindow(QWidget* parent = nullptr);
-	~mlMainWindow() {}
+	~mlMainWindow() = default;
 
 	void UpdateDB();
 

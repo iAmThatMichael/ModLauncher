@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-Dvar::Dvar(dvar_s _dvar, QTreeWidget* _dvarTree) : dvar(_dvar)
+Dvar::Dvar(dvar_s dvar, QTreeWidget* dvarTree) : dvar(dvar)
 {
 	const auto dvarSetting = QString("dvar_%1").arg(dvar.name);
 	const auto settings = QSettings{};
 
-	auto* Item = new QTreeWidgetItem(_dvarTree, QStringList() << dvar.name);
-	Item->setText(0, dvar.name);
-	Item->setToolTip(0, dvar.description);
+	auto* item = new QTreeWidgetItem(dvarTree, QStringList() << dvar.name);
+	item->setText(0, dvar.name);
+	item->setToolTip(0, dvar.description);
 
 	QCheckBox* checkBox;
 	QSpinBox* spinBox;
@@ -19,7 +19,7 @@ Dvar::Dvar(dvar_s _dvar, QTreeWidget* _dvarTree) : dvar(_dvar)
 		checkBox = new QCheckBox();
 		checkBox->setChecked(settings.value(dvarSetting, false).toBool());
 		checkBox->setToolTip("Boolean value, check to enable or uncheck to disable.");
-		_dvarTree->setItemWidget(Item, 1, checkBox);
+		dvarTree->setItemWidget(item, 1, checkBox);
 		break;
 	case DVAR_VALUE_INT:
 		spinBox = new QSpinBox();
@@ -28,51 +28,50 @@ Dvar::Dvar(dvar_s _dvar, QTreeWidget* _dvarTree) : dvar(_dvar)
 		spinBox->setMaximum(dvar.maxValue);
 		spinBox->setMinimum(dvar.minValue);
 		spinBox->setFixedHeight(16); // need this
-		_dvarTree->setItemWidget(Item, 1, spinBox);
+		dvarTree->setItemWidget(item, 1, spinBox);
 		break;
 	case DVAR_VALUE_STRING:
 		textBox = new QLineEdit();
 		textBox->setText(settings.value(dvarSetting, "").toString());
 		textBox->setToolTip(QString("String value, leave this blank for it to not be used."));
 		textBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-		_dvarTree->setItemWidget(Item, 1, textBox);
+		dvarTree->setItemWidget(item, 1, textBox);
 		break;
 	}
 }
 
 dvar_s Dvar::findDvar(QString _dvarName, QTreeWidget* DvarTree, dvar_s* dvars, int DvarSize)
 {
-	dvar_s _dvar;
-	for (int DvarIdx = 0; DvarIdx < DvarSize; DvarIdx++)
+	auto dvar = dvar_s{};
+	for (auto dvarIdx = 0; dvarIdx < DvarSize; dvarIdx++)
 	{
-		_dvar = Dvar(dvars[DvarIdx], DvarTree).dvar;
-		if (_dvar.name == _dvarName)
-			return _dvar;
+		dvar = Dvar(dvars[dvarIdx], DvarTree).dvar;
+		if (dvar.name == _dvarName)
+			return dvar;
 	}
-	return _dvar;
+	return dvar;
 }
 
-QString Dvar::setDvarSetting(dvar_s _dvar, QCheckBox* _checkBox)
+QString Dvar::setDvarSetting(dvar_s dvar, QCheckBox* checkBox)
 {
-	QSettings Settings;
-	Settings.setValue(QString("dvar_%1").arg(_dvar.name), _checkBox->isChecked());
+	auto settings = QSettings{};
+	settings.setValue(QString("dvar_%1").arg(dvar.name), checkBox->isChecked());
 
-	return Settings.value(QString("dvar_%1").arg(_dvar.name)).toString() == "true" ? "1" : "0";
-	// another way to do this?
+	return settings.value(QString("dvar_%1").arg(dvar.name)).toString() == "true" ? "1" : "0"; // another way to do this?
 }
 
 QString Dvar::setDvarSetting(dvar_s _dvar, QSpinBox* _spinBox)
 {
-	QSettings Settings;
-	Settings.setValue(QString("dvar_%1").arg(_dvar.name), _spinBox->value());
+	auto settings = QSettings{};
+	settings.setValue(QString("dvar_%1").arg(_dvar.name), _spinBox->value());
 
-	return Settings.value(QString("dvar_%1").arg(_dvar.name)).toString();
+	return settings.value(QString("dvar_%1").arg(_dvar.name)).toString();
 }
 
 QString Dvar::setDvarSetting(dvar_s _dvar, QLineEdit* _lineEdit)
 {
-	QSettings Settings;
-	Settings.setValue(QString("dvar_%1").arg(_dvar.name), _lineEdit->text());
+	auto settings = QSettings{};
+	settings.setValue(QString("dvar_%1").arg(_dvar.name), _lineEdit->text());
 
-	return Settings.value(QString("dvar_%1").arg(_dvar.name)).toString();
+	return settings.value(QString("dvar_%1").arg(_dvar.name)).toString();
 }
