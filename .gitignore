@@ -21,3 +21,4 @@ release/
 ModLauncher.vcxproj
 ModLauncher_resource.rc
 resource.h
+*.vcxproj
