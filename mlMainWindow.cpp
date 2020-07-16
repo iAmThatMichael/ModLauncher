@@ -18,6 +18,7 @@
 */
 
 #include "mlMainWindow.h"
+#include "Instrumentor.h"
 
 #include "stdafx.h"
 

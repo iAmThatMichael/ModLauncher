@@ -51,7 +51,7 @@ class mlConvertThread : public QThread
 
 public:
 	mlConvertThread(QStringList& Files, QString& OutputDir, bool IgnoreErrors, bool mOverwrite);
-	void run();
+	void run() override;
 	bool Succeeded() const
 	{
 		return mSuccess;
@@ -128,10 +128,10 @@ protected slots:
 	static void SteamUpdate();
 
 protected:
-	void closeEvent(QCloseEvent* Event);
+	void closeEvent(QCloseEvent* Event) override;
 
 	void StartBuildThread(const QList<QPair<QString, QStringList>>& Commands);
-	void mlMainWindow::StartConvertThread(QStringList& pathList, QString& outputDir, bool allowOverwrite);
+	void StartConvertThread(QStringList& pathList, QString& outputDir, bool allowOverwrite);
 
 	void PopulateFileList() const;
 	void UpdateWorkshopItem();
